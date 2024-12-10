@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Navigate } from "react-router";
-import { useState, useEffect } from "react";
-import { loginUser, updateUser } from "@/utils/api";
+import { useState } from "react";
+import { loginUser } from "@/utils/api";
 import { useAuth } from "@/context";
 import toast from "react-hot-toast";
 
@@ -46,10 +46,8 @@ const SignInForm = () => {
 
     try {
       const response = await loginUser(values);
-      const user_response = await updateUser({hasProfile: true});
-      console.log(user_response, "user");
       toast.success("Login successful");
-      authenticateUser( response.userId, response.token, response.roleId, user_response.hasProfile);
+      authenticateUser( response.userId, response.token, response.roleId);
     } catch (error) {
       toast.error("Invalid login credentials");
       setErrorMessage("Invalid login credentials");
@@ -59,14 +57,13 @@ const SignInForm = () => {
     }
   };
 
-  if (isAuthenticated) {
-    // user has memberId redirect to dhasb
-    return <Navigate to="/profile" />;
-  }
 
-  if( isAuthenticated && hasProfile){
-    return <Navigate to="/dashboard" />;
-  }
+if (isAuthenticated) {
+  console.log(isAuthenticated, "is authenticated");
+  console.log(hasProfile, "has profile");
+  return <Navigate to={hasProfile ? "/dashboard" : "/profile"} />;
+}
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">

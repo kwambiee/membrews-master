@@ -6,197 +6,89 @@ import StatisticCard from "./components/statistics";
 import ActivityLogs from "./components/activity-logs";
 import { useAuth } from "@/context"
 import { useNavigate } from "react-router";
-import { UserDetails } from "@/types/user-details";
 import {getRoles, getMembers, getActivityLogs} from "@/utils/api";
+import { ArrowUpDown } from "lucide-react"
+import { Button } from "@/components/ui/button";
 
-const data: UserDetails[] = [
-  {
-    id: "728ed52f",
-    name: "Jane Doe",
-    email: "jane@gmail.com",
-    role: "admin",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1990-01-01",
-  },
-  {
-    id: "728ed530",
-    name: "John Smith",
-    email: "john@gmail.com",
-    role: "member",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1985-05-15",
-  },
-  {
-    id: "728ed531",
-    name: "Alice Johnson",
-    email: "alice@gmail.com",
-    role: "admin",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1992-07-21",
-  },
-  {
-    id: "728ed532",
-    name: "Bob Brown",
-    email: "bob@gmail.com",
-    role: "member",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1988-11-30",
-  },
-  {
-    id: "728ed533",
-    name: "Charlie Davis",
-    email: "charlie@gmail.com",
-    role: "admin",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1995-03-12",
-  },
-  {
-    id: "728ed534",
-    name: "Diana Evans",
-    email: "diana@gmail.com",
-    role: "member",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1991-08-25",
-  },
-  {
-    id: "728ed535",
-    name: "Eve Foster",
-    email: "eve@gmail.com",
-    role: "admin",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1989-12-05",
-  },
-  {
-    id: "728ed536",
-    name: "Frank Green",
-    email: "frank@gmail.com",
-    role: "member",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1993-04-18",
-  },
-  {
-    id: "728ed537",
-    name: "Grace Harris",
-    email: "grace@gmail.com",
-    role: "admin",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1994-09-09",
-  },
-  {
-    id: "728ed538",
-    name: "Henry Jackson",
-    email: "henry@gmail.com",
-    role: "member",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1987-02-22",
-  },
-  {
-    id: "728ed539",
-    name: "Ivy King",
-    email: "ivy@gmail.com",
-    role: "admin",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1996-06-14",
-  },
-  {
-    id: "728ed53a",
-    name: "Jack Lee",
-    email: "jack@gmail.com",
-    role: "member",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1990-10-10",
-  },
-  {
-    id: "728ed53b",
-    name: "Kathy Miller",
-    email: "kathy@gmail.com",
-    role: "admin",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1986-01-29",
-  },
-  {
-    id: "728ed53c",
-    name: "Leo Nelson",
-    email: "leo@gmail.com",
-    role: "member",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1991-11-11",
-  },
-  {
-    id: "728ed53d",
-    name: "Mia Owens",
-    email: "mia@gmail.com",
-    role: "admin",
-    profile: {
-      avatar: "https://api.dicebear.com/9.x/avataaars/svg",
-    },
-    dateOfBirth: "1993-03-03",
-  },
-];
+
 
 const columns: ColumnDef<{
   id: string;
   name: string;
-  email: string;
+  phone: string;
   role: string;
-  profile: { avatar: string };
+  profilePicture: string;
   dateOfBirth: string;
 }>[] = [
   {
     accessorKey: "name",
-    header: "Name",
+    // make header sortable
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "phone",
+    header:({column}) =>{
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Phone
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    }
   },
   {
     accessorKey: "role",
-    header: "Role",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Role
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
-    accessorKey: "profile.avatar",
-    header: "Avatar",
+    accessorKey: "profilePicture",
+    header: "Profile Picture",
     cell: ({ row }) => (
       <img
-        src={row.original.profile.avatar}
-        alt="avatar"
+        src={row.original.profilePicture}
+        alt="Profile Picture"
         width={50}
         height={50}
+        className="rounded-full"
       />
     ),
   },
   {
     accessorKey: "dateOfBirth",
-    header: "Date of Birth",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date of Birth
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    }
   },
 ];
 
@@ -225,6 +117,13 @@ type activityLogType = {
   updatedAt: string;
   description: string;
   userId: string;
+}
+
+type memberChart = {
+  admins: number;
+  members: number;
+  users: number;
+  date: string;
 }
 
 const Dashboard = () => {
@@ -266,12 +165,34 @@ const Dashboard = () => {
     setActivityLogs(response.data);
   }
 
-  console.log(activityLogs, "activity logs");
-
-
   const totalAdmins = memberData.filter((member) => member.roleId === adminId).length;
   const totalMembers = memberData.filter((member) => member.roleId === memberId).length;
   const totalUsers = memberData.length;
+
+  console.log(totalAdmins, "---admin", totalMembers,"members",totalUsers, "users");
+
+  // const find total admin, members and users at different dates of creation
+  const memberChartData: memberChart[] = [];
+  const memberDataByDate = memberData.reduce((acc, member) => {
+    const date = member.createdAt
+    if (!acc[date]) {
+      acc[date] = {
+        admins: 0,
+        members: 0,
+        users: totalUsers,
+        date,
+      };
+    }
+    if (member.roleId === adminId) {
+      acc[date].admins += 1;
+    } else if (member.roleId === memberId) {
+      acc[date].members += 1;
+    }
+    return acc;
+  }, {} as Record<string, memberChart>);
+  memberChartData.push(...Object.values(memberDataByDate));
+
+  console.log(memberChartData);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -286,14 +207,24 @@ const Dashboard = () => {
       <StatisticCard adminCount={totalAdmins} memberCount={totalMembers} totalCount={totalUsers} />
       <div className="flex gap-x-4">
         <div className="w-3/4">
-          <MembershipChart />
+          <MembershipChart chartData={memberChartData} />
         </div>
         <div className="w-1/4">
           <ActivityLogs logs={activityLogs} members={memberData} />
         </div>
       </div>
 
-      <DataTable columns={columns} data={data} />
+      <DataTable
+        columns={columns}
+        data={memberData.map((member) => ({
+          id: member.id,
+          name: `${member.firstName} ${member.lastName}`,
+          phone: member.phone,
+          role: userRoles.find((role) => role.id === member.roleId)?.roleName || "",
+          profilePicture: member.profilePicture,
+          dateOfBirth: member.dateOfBirth,
+        }))}
+      />
     </div>
   );
 };

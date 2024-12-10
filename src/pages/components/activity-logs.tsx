@@ -52,7 +52,6 @@ interface ActivityLogsProps {
 const ActivityLogs = ({ logs, members }: ActivityLogsProps) => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | null>(null)
-    const [logData, setLogData] = useState<logDataType[]>([])
 
     const refinedLogData: logDataType[] = []
     const updateLogData = logs.map((log: activityType) => {
@@ -68,7 +67,6 @@ const ActivityLogs = ({ logs, members }: ActivityLogsProps) => {
     )
 
     refinedLogData.push(...updateLogData)
-    console.log(refinedLogData)
     
 
     return (

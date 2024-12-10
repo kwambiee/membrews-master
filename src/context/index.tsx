@@ -1,14 +1,14 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { set } from "react-hook-form";
 
 interface AuthContextType {
   userId: string | null;
   token: string | null;
   roleId: string | null;
   isAuthenticated: boolean;
-  authenticateUser: (userId: string, token: string, roleId:string, hasProfile:boolean) => void;
+  authenticateUser: (userId: string, token: string, roleId:string) => void;
   logoutUser: () => void;
   hasProfile: boolean;
+  setUserProfile: (hasProfile: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -24,13 +24,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const savedToken = localStorage.getItem("token");
     const savedUserId = localStorage.getItem("userId");
     const savedRoleId = localStorage.getItem("roleId");
+    const savedHasProfile = localStorage.getItem("hasProfile");
 
-    if (savedToken && savedUserId && savedRoleId && hasProfile) {
+    if (savedToken && savedUserId && savedRoleId && savedHasProfile) {
       setToken(savedToken);
       setUserId(savedUserId);
       setRoleId(savedRoleId);
       setIsAuthenticated(true);
-      setHasProfile(hasProfile);
+      setHasProfile(savedHasProfile === "true");
     }
   }, []);
 
@@ -39,18 +40,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setToken(token);
     setRoleId(roleId);
     setIsAuthenticated(true);
-    setHasProfile(hasProfile);
     localStorage.setItem("token", token);
     localStorage.setItem("userId", userId);
     localStorage.setItem("roleId", roleId);
   };
+
+  const setUserProfile = (hasProfile: boolean) => {
+    setHasProfile(hasProfile);
+    localStorage.setItem("hasProfile", hasProfile.toString());
+  }
 
   const logoutUser = () => {
     setUserId(null);
     setToken(null);
     setRoleId(null);
     setIsAuthenticated(false);
-    setHasProfile(false);
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("roleId");
@@ -65,6 +69,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isAuthenticated,
         authenticateUser,
         logoutUser,
+        setUserProfile,
         hasProfile,
       }}
     >

@@ -19,7 +19,7 @@ export function StatisticCard({ adminCount, memberCount, totalCount }: Statistic
     <div className="grid grid-cols-3 gap-4">
       <Card>
         <CardHeader>
-          <CardTitle>Total AAdmin</CardTitle>
+          <CardTitle>Total Users</CardTitle>
         </CardHeader>
         <CardContent>
           <CardDescription>{totalCount}</CardDescription>

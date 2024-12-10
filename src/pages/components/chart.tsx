@@ -29,92 +29,105 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 
-  const chartData = [
-    { date: "2024-04-01", desktop: 222, mobile: 150, laptop: 100 },
-    { date: "2024-04-02", desktop: 97, mobile: 180, laptop: 120 },
-    { date: "2024-04-03", desktop: 167, mobile: 120, laptop: 140 },
-    { date: "2024-04-04", desktop: 242, mobile: 260, laptop: 200 },
-    { date: "2024-04-05", desktop: 373, mobile: 290, laptop: 230 },
-    { date: "2024-04-06", desktop: 301, mobile: 340, laptop: 250 },
-    { date: "2024-04-07", desktop: 245, mobile: 180, laptop: 190 },
-    { date: "2024-04-08", desktop: 409, mobile: 320, laptop: 310 },
-    { date: "2024-04-09", desktop: 59, mobile: 110, laptop: 90 },
-    { date: "2024-04-10", desktop: 261, mobile: 190, laptop: 170 },
-    { date: "2024-04-11", desktop: 327, mobile: 350, laptop: 300 },
-    { date: "2024-04-12", desktop: 292, mobile: 210, laptop: 200 },
-    { date: "2024-04-13", desktop: 342, mobile: 380, laptop: 330 },
-    { date: "2024-04-14", desktop: 137, mobile: 220, laptop: 180 },
-    { date: "2024-04-15", desktop: 120, mobile: 170, laptop: 150 },
-    { date: "2024-04-16", desktop: 138, mobile: 190, laptop: 160 },
-    { date: "2024-04-17", desktop: 446, mobile: 360, laptop: 340 },
-    { date: "2024-04-18", desktop: 364, mobile: 410, laptop: 370 },
-    { date: "2024-04-19", desktop: 243, mobile: 180, laptop: 160 },
-    { date: "2024-04-20", desktop: 89, mobile: 150, laptop: 130 },
-    { date: "2024-04-21", desktop: 137, mobile: 200, laptop: 170 },
-    { date: "2024-04-22", desktop: 224, mobile: 170, laptop: 190 },
-    { date: "2024-04-23", desktop: 138, mobile: 230, laptop: 200 },
-    { date: "2024-04-24", desktop: 387, mobile: 290, laptop: 280 },
-    { date: "2024-04-25", desktop: 215, mobile: 250, laptop: 220 },
-    { date: "2024-04-26", desktop: 75, mobile: 130, laptop: 100 },
-    { date: "2024-04-27", desktop: 383, mobile: 420, laptop: 350 },
-    { date: "2024-04-28", desktop: 122, mobile: 180, laptop: 150 },
-    { date: "2024-04-29", desktop: 315, mobile: 240, laptop: 230 },
-    { date: "2024-04-30", desktop: 454, mobile: 380, laptop: 400 },
-    { date: "2024-05-01", desktop: 165, mobile: 220, laptop: 190 },
-    { date: "2024-05-02", desktop: 293, mobile: 310, laptop: 290 },
-    { date: "2024-05-03", desktop: 247, mobile: 190, laptop: 180 },
-    { date: "2024-05-04", desktop: 385, mobile: 420, laptop: 390 },
-    { date: "2024-05-05", desktop: 481, mobile: 390, laptop: 410 },
-    { date: "2024-05-06", desktop: 498, mobile: 520, laptop: 450 },
-    { date: "2024-05-07", desktop: 388, mobile: 300, laptop: 340 },
-    { date: "2024-05-08", desktop: 149, mobile: 210, laptop: 180 },
-    { date: "2024-05-09", desktop: 227, mobile: 180, laptop: 170 },
-    { date: "2024-05-10", desktop: 293, mobile: 330, laptop: 320 },
-    { date: "2024-05-11", desktop: 335, mobile: 270, laptop: 260 },
-    { date: "2024-05-12", desktop: 197, mobile: 240, laptop: 200 },
-    { date: "2024-05-13", desktop: 197, mobile: 160, laptop: 150 },
-    { date: "2024-05-14", desktop: 448, mobile: 490, laptop: 420 },
-    { date: "2024-05-15", desktop: 473, mobile: 380, laptop: 350 },
-    { date: "2024-05-16", desktop: 338, mobile: 400, laptop: 370 },
-    { date: "2024-05-17", desktop: 499, mobile: 420, laptop: 400 },
-    { date: "2024-05-18", desktop: 315, mobile: 350, laptop: 320 },
-    { date: "2024-05-19", desktop: 235, mobile: 180, laptop: 170 },
-    { date: "2024-05-20", desktop: 177, mobile: 230, laptop: 190 },
-  ];
+
+  
+      interface chartData { 
+      admins: number;
+      members: number;
+      users: number;
+      date: string;
+  }
+  
+  // const chartData = [
+  //   { date: "2024-04-01", desktop: 222, mobile: 150, laptop: 100 },
+  //   { date: "2024-04-02", desktop: 97, mobile: 180, laptop: 120 },
+  //   { date: "2024-04-03", desktop: 167, mobile: 120, laptop: 140 },
+  //   { date: "2024-04-04", desktop: 242, mobile: 260, laptop: 200 },
+  //   { date: "2024-04-05", desktop: 373, mobile: 290, laptop: 230 },
+  //   { date: "2024-04-06", desktop: 301, mobile: 340, laptop: 250 },
+  //   { date: "2024-04-07", desktop: 245, mobile: 180, laptop: 190 },
+  //   { date: "2024-04-08", desktop: 409, mobile: 320, laptop: 310 },
+  //   { date: "2024-04-09", desktop: 59, mobile: 110, laptop: 90 },
+  //   { date: "2024-04-10", desktop: 261, mobile: 190, laptop: 170 },
+  //   { date: "2024-04-11", desktop: 327, mobile: 350, laptop: 300 },
+  //   { date: "2024-04-12", desktop: 292, mobile: 210, laptop: 200 },
+  //   { date: "2024-04-13", desktop: 342, mobile: 380, laptop: 330 },
+  //   { date: "2024-04-14", desktop: 137, mobile: 220, laptop: 180 },
+  //   { date: "2024-04-15", desktop: 120, mobile: 170, laptop: 150 },
+  //   { date: "2024-04-16", desktop: 138, mobile: 190, laptop: 160 },
+  //   { date: "2024-04-17", desktop: 446, mobile: 360, laptop: 340 },
+  //   { date: "2024-04-18", desktop: 364, mobile: 410, laptop: 370 },
+  //   { date: "2024-04-19", desktop: 243, mobile: 180, laptop: 160 },
+  //   { date: "2024-04-20", desktop: 89, mobile: 150, laptop: 130 },
+  //   { date: "2024-04-21", desktop: 137, mobile: 200, laptop: 170 },
+  //   { date: "2024-04-22", desktop: 224, mobile: 170, laptop: 190 },
+  //   { date: "2024-04-23", desktop: 138, mobile: 230, laptop: 200 },
+  //   { date: "2024-04-24", desktop: 387, mobile: 290, laptop: 280 },
+  //   { date: "2024-04-25", desktop: 215, mobile: 250, laptop: 220 },
+  //   { date: "2024-04-26", desktop: 75, mobile: 130, laptop: 100 },
+  //   { date: "2024-04-27", desktop: 383, mobile: 420, laptop: 350 },
+  //   { date: "2024-04-28", desktop: 122, mobile: 180, laptop: 150 },
+  //   { date: "2024-04-29", desktop: 315, mobile: 240, laptop: 230 },
+  //   { date: "2024-04-30", desktop: 454, mobile: 380, laptop: 400 },
+  //   { date: "2024-05-01", desktop: 165, mobile: 220, laptop: 190 },
+  //   { date: "2024-05-02", desktop: 293, mobile: 310, laptop: 290 },
+  //   { date: "2024-05-03", desktop: 247, mobile: 190, laptop: 180 },
+  //   { date: "2024-05-04", desktop: 385, mobile: 420, laptop: 390 },
+  //   { date: "2024-05-05", desktop: 481, mobile: 390, laptop: 410 },
+  //   { date: "2024-05-06", desktop: 498, mobile: 520, laptop: 450 },
+  //   { date: "2024-05-07", desktop: 388, mobile: 300, laptop: 340 },
+  //   { date: "2024-05-08", desktop: 149, mobile: 210, laptop: 180 },
+  //   { date: "2024-05-09", desktop: 227, mobile: 180, laptop: 170 },
+  //   { date: "2024-05-10", desktop: 293, mobile: 330, laptop: 320 },
+  //   { date: "2024-05-11", desktop: 335, mobile: 270, laptop: 260 },
+  //   { date: "2024-05-12", desktop: 197, mobile: 240, laptop: 200 },
+  //   { date: "2024-05-13", desktop: 197, mobile: 160, laptop: 150 },
+  //   { date: "2024-05-14", desktop: 448, mobile: 490, laptop: 420 },
+  //   { date: "2024-05-15", desktop: 473, mobile: 380, laptop: 350 },
+  //   { date: "2024-05-16", desktop: 338, mobile: 400, laptop: 370 },
+  //   { date: "2024-05-17", desktop: 499, mobile: 420, laptop: 400 },
+  //   { date: "2024-05-18", desktop: 315, mobile: 350, laptop: 320 },
+  //   { date: "2024-05-19", desktop: 235, mobile: 180, laptop: 170 },
+  //   { date: "2024-05-20", desktop: 177, mobile: 230, laptop: 190 },
+  // ];
 
   const chartConfig = {
     visitors: {
       label: "Visitors",
     },
-    desktop: {
-      label: "Desktop",
+    admins: {
+      label: "Admins",
       color: "hsl(var(--chart-1))",
     },
-    mobile: {
-      label: "Mobile",
+    members: {
+      label: "Members",
       color: "hsl(var(--chart-2))",
     },
-    laptop: {
-      label: "Laptop",
+    users: {
+      label: "Users",
       color: "hsl(var(--chart-3))",
     },
   } satisfies ChartConfig
 
-  const  MembershipChart = ()  =>{
-    const [timeRange, setTimeRange] = useState("90d")
+  const  MembershipChart = ({chartData}: { chartData: chartData[] })  =>{
+    const [timeRange, setTimeRange] = useState("30d")
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.date)
+        console.log(date, "date")
         const referenceDate = new Date("2024-06-30")
-        let daysToSubtract = 90
-        if (timeRange === "30d") {
+        let daysToSubtract = 60
+        if (timeRange === "15d") {
           daysToSubtract = 30
         } else if (timeRange === "7d") {
           daysToSubtract = 7
         }
         const startDate = new Date(referenceDate)
         startDate.setDate(startDate.getDate() - daysToSubtract)
+        console.log(startDate, "startDate")
         return date >= startDate
       })
+
+      console.log(filteredData, "filteredData")
 
       return (
         <Card>
@@ -152,39 +165,39 @@ import {
             >
               <AreaChart data={filteredData}>
                 <defs>
-                  <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="fillAdmins" x1="0" y1="0" x2="0" y2="1">
                     <stop
                       offset="5%"
-                      stopColor="var(--color-desktop)"
+                      stopColor="var(--color-admins)"
                       stopOpacity={0.8}
                     />
                     <stop
                       offset="95%"
-                      stopColor="var(--color-desktop)"
+                      stopColor="var(--color-admins)"
                       stopOpacity={0.1}
                     />
                   </linearGradient>
-                  <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="fillMembers" x1="0" y1="0" x2="0" y2="1">
                     <stop
                       offset="5%"
-                      stopColor="var(--color-mobile)"
+                      stopColor="var(--color-members)"
                       stopOpacity={0.8}
                     />
                     <stop
                       offset="95%"
-                      stopColor="var(--color-mobile)"
+                      stopColor="var(--color-members)"
                       stopOpacity={0.1}
                     />
                   </linearGradient>
-                  <linearGradient id="fillLaptop" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="fillUsers" x1="0" y1="0" x2="0" y2="1">
                     <stop
                       offset="5%"
-                      stopColor="var(--color-laptop)"
+                      stopColor="var(--color-users)"
                       stopOpacity={0.8}
                     />
                     <stop
                       offset="95%"
-                      stopColor="var(--color-laptop)"
+                      stopColor="var(--color-users)"
                       stopOpacity={0.1}
                     />
                     </linearGradient>
@@ -219,24 +232,24 @@ import {
                   }
                 />
                 <Area
-                  dataKey="mobile"
+                  dataKey="members"
                   type="natural"
-                  fill="url(#fillMobile)"
-                  stroke="var(--color-mobile)"
+                  fill="url(#fillMembers)"
+                  stroke="var(--color-members)"
                   stackId="a"
                 />
                 <Area
-                  dataKey="desktop"
+                  dataKey="admins"
                   type="natural"
-                  fill="url(#fillDesktop)"
-                  stroke="var(--color-desktop)"
+                  fill="url(#filladmins)"
+                  stroke="var(--color-admins)"
                   stackId="a"
                 />
                 <Area
-                  dataKey="laptop"
+                  dataKey="users"
                   type="natural"
-                  fill="var(--color-laptop)"
-                  stroke="var(--color-laptop)"
+                  fill="var(--color-users)"
+                  stroke="var(--color-users)"
                   stackId="a"
                   />
                 <ChartLegend content={<ChartLegendContent />} />

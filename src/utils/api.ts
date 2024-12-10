@@ -32,9 +32,9 @@ export const registerUser = async (values: {
   return axios.post(`${baseUrl}/users`, values).then((res) => res.data);
 };
 
-export const updateUser = async ({values}: any) => {
+export const updateUser = async ({userId, hasProfile}: { userId: string; hasProfile: boolean }) => {
   return axios
-    .put(`${baseUrl}/users/${localStorage.getItem("userId")}`, values)
+    .put(`${baseUrl}/users/${userId}`, hasProfile)
     .then((res) => res.data);
 }
 
@@ -99,7 +99,7 @@ export const getMemberById = async (id: string) => {
 };
 
 export const getActivityLogs = async () => {
-  return axios.get(`${baseUrl}/activity-logs`,
+  return axios.get(`${baseUrl}/activity_logs`,
     {
       headers: {
         "Content-Type": "application/json",

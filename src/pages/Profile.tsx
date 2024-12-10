@@ -34,7 +34,7 @@ const ProfileFormSchema = z.object({
 export type ProfileFormValues = z.infer<typeof ProfileFormSchema>;
 
 const ProfileForm = () => {
-  const { userId, token, roleId,  } = useAuth();
+  const { userId, token, roleId, setUserProfile } = useAuth();
   const [profilePicture, setProfilePicture] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -86,9 +86,9 @@ const ProfileForm = () => {
       token: token,
     };
     try {
-      await createMember(data);
-      await updateUser({hasProfile: true});
-
+      const response =  await createMember(data);
+      const user_response = await updateUser({userId: response.userId, hasProfile: true});
+      setUserProfile(true);
       navigate("/dashboard");
     } catch (error) {
       console.log(error);
