@@ -72,7 +72,7 @@ const SignUpForm = () => {
     try {
       const response = await registerUser(values);
       toast.success("Account created successfully.");
-      authenticateUser(response.token, response.user.id);
+      authenticateUser( response.user.id, response.token);
     } catch (error) {
       toast.error("An error occurred. Please try again.");
       console.log(error);
@@ -83,7 +83,7 @@ const SignUpForm = () => {
   };
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/profile" />;
   }
 
   return (

@@ -44,7 +44,7 @@ const SignInForm = () => {
     try {
       const response = await loginUser(values);
       toast.success("Login successful");
-      authenticateUser(response.token, response.userId);
+      authenticateUser( response.userId, response.token);
     } catch (error) {
       toast.error("Invalid login credentials");
       setErrorMessage("Invalid login credentials");
@@ -55,7 +55,7 @@ const SignInForm = () => {
   };
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/profile" />;
   }
 
   return (

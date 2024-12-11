@@ -17,6 +17,9 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/context";
 import { createMember } from "@/utils/api";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {storage} from "@/utils/firebase";
+
 
 const ProfileFormSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -44,17 +47,25 @@ const ProfileForm = () => {
     },
   });
 
-  const handleProfilePictureChange = (
+  const handleProfilePictureChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        profileForm.setValue("profilePicture", reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    try{
+      const file = event.target.files?.[0];
+       if (!file) return;
+
+      const storageRef = ref(storage, `profilePictures/${file.name}`);
+      // Upload the file to Firebase Storage
+      const snapShot = await uploadBytes(storageRef, file);
+      // Get the download URL
+      const downloadURL = await getDownloadURL(snapShot.ref);
+    console.log("Image URL:", downloadURL);
+    // Set the profilePicture field to the download URL
+    profileForm.setValue("profilePicture", downloadURL);
+    }catch(error){
+      console.log(error);
     }
+    
   };
 
   const profileSubmit = async (values: ProfileFormValues) => {
@@ -156,3 +167,5 @@ const ProfileForm = () => {
 };
 
 export default ProfileForm;
+
+
