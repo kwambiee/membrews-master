@@ -1,12 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "./components/data-table";
 import MembershipChart from "./components/chart";
 import StatisticCard from "./components/statistics";
 import ActivityLogs from "./components/activity-logs";
-// import { useAuth } from "@/context"
+import { useAuth } from "@/context"
 import { useNavigate } from "react-router";
 import { UserDetails } from "@/types/user-details";
+import {getRoles, getMembers, getActivityLogs} from "@/utils/api";
 
 const data: UserDetails[] = [
   {
@@ -199,11 +200,78 @@ const columns: ColumnDef<{
   },
 ];
 
+type roles = {
+  id: string;
+  roleName: string;
+}
+
+type userDataType = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  profilePicture: string;
+  dateOfBirth: string;
+  phone: string;
+  userId: string;
+  roleId: string;
+  createdAt: string;
+  updatedAt: string; 
+};
+
+type activityLogType = {
+  id: string;
+  action: string;
+  createdAt: string;
+  updatedAt: string;
+  description: string;
+  userId: string;
+}
+
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const [memberData, setMemberData] = useState<userDataType[]>([]);
+  const [activityLogs, setActivityLogs] = useState<activityLogType[]>([]);
+  const [userRoles, setUserRoles] = useState<roles[]>([]);
+  const [adminId, setAdminId] = useState<string | null>(null);
+  const [memberId, setMemberId] = useState<string | null>(null);
 
-  const isAuthenticated = true;
-  //   console.log(isAuthenticated, "isAuthenticated");
+  useEffect(() => {
+    getAllUsers();
+    getAllLogs();
+    getUserRoles();
+  }, []);
+
+
+  // get user roles from api//
+  const getUserRoles = async () => {
+    const roles = await getRoles();
+    setUserRoles(roles);
+    if (userRoles.length > 0) {
+      setAdminId(roles.find((role: roles) => role.roleName === "Admin")?.id || null);
+      setMemberId(roles.find((role: roles) => role.roleName === "Member")?.id || null);
+  };
+  }
+
+   // get all members 
+   const getAllUsers = async () => {
+    const response = await getMembers();
+    setMemberData(response.data);
+   }
+
+  // -----get activity logs from api//
+
+  const getAllLogs = async () => {
+    const response = await getActivityLogs();
+    setActivityLogs(response.data);
+  }
+
+  console.log(activityLogs, "activity logs");
+
+
+  const totalAdmins = memberData.filter((member) => member.roleId === adminId).length;
+  const totalMembers = memberData.filter((member) => member.roleId === memberId).length;
+  const totalUsers = memberData.length;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -215,13 +283,13 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col gap-8 p-12">
-      <StatisticCard data={data} />
+      <StatisticCard adminCount={totalAdmins} memberCount={totalMembers} totalCount={totalUsers} />
       <div className="flex gap-x-4">
         <div className="w-3/4">
           <MembershipChart />
         </div>
         <div className="w-1/4">
-          <ActivityLogs />
+          <ActivityLogs logs={activityLogs} members={memberData} />
         </div>
       </div>
 

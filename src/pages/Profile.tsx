@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/context";
-import { createMember } from "@/utils/api";
+import { createMember, updateUser } from "@/utils/api";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {storage} from "@/utils/firebase";
 
@@ -27,14 +27,18 @@ const ProfileFormSchema = z.object({
   dateOfBirth: z.string().min(1, "Date of birth is required"),
   phone: z.string().min(10, "Phone number must be at least 10 characters"),
   profilePicture: z.string().optional(), // Profile picture as a base64 string
+  roleId: z.string(),
+  userId: z.string(),
 });
 
 export type ProfileFormValues = z.infer<typeof ProfileFormSchema>;
 
 const ProfileForm = () => {
-  const { userId, token } = useAuth();
+  const { userId, token, roleId,  } = useAuth();
+  const [profilePicture, setProfilePicture] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
 
   const profileForm = useForm<ProfileFormValues>({
     resolver: zodResolver(ProfileFormSchema),
@@ -44,6 +48,8 @@ const ProfileForm = () => {
       dateOfBirth: "",
       phone: "",
       profilePicture: "",
+      roleId:"",
+      userId: "",
     },
   });
 
@@ -57,11 +63,13 @@ const ProfileForm = () => {
       const storageRef = ref(storage, `profilePictures/${file.name}`);
       // Upload the file to Firebase Storage
       const snapShot = await uploadBytes(storageRef, file);
+      console.log("Uploaded a file", snapShot);
       // Get the download URL
       const downloadURL = await getDownloadURL(snapShot.ref);
     console.log("Image URL:", downloadURL);
     // Set the profilePicture field to the download URL
-    profileForm.setValue("profilePicture", downloadURL);
+    setProfilePicture(downloadURL);
+    // profileForm.setValue("profilePicture", downloadURL);
     }catch(error){
       console.log(error);
     }
@@ -69,14 +77,17 @@ const ProfileForm = () => {
   };
 
   const profileSubmit = async (values: ProfileFormValues) => {
+    console.log("Profile updated successfully");
     setLoading(true);
+    console.log(roleId);
 
     const data = {
-      values: { ...values, userId: userId },
+      values: { ...values, profilePicture: profilePicture, userId: userId, roleId: roleId || "" },
       token: token,
     };
     try {
       await createMember(data);
+      await updateUser({hasProfile: true});
 
       navigate("/dashboard");
     } catch (error) {
@@ -156,8 +167,8 @@ const ProfileForm = () => {
                 />
               </FormControl>
             </FormItem>
-            <Button type="submit" disabled={loading} className="mt-4 w-full">
-              {loading ? "Submitting..." : "Submit"}
+            <Button type="submit" className="mt-4 w-full">
+              Submit
             </Button>
           </form>
         </Form>

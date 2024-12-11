@@ -30,6 +30,7 @@ const signUpFormSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters long"),
   roleId: z.string().uuid("Invalid role id"),
+  hasProfile: z.boolean(),
 });
 
 export type signUpFormValues = z.infer<typeof signUpFormSchema>;
@@ -40,7 +41,7 @@ type Role = {
 };
 
 const SignUpForm = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState<Role[]>([]);
 
   const { authenticateUser, isAuthenticated } = useAuth();
@@ -65,6 +66,7 @@ const SignUpForm = () => {
       email: "",
       password: "",
       roleId: "",
+      hasProfile: false,
     },
   });
 
@@ -72,7 +74,7 @@ const SignUpForm = () => {
     try {
       const response = await registerUser(values);
       toast.success("Account created successfully.");
-      authenticateUser( response.user.id, response.token);
+      authenticateUser( response.user.id, response.token, response.user.roleId, response.user.hasProfile);
     } catch (error) {
       toast.error("An error occurred. Please try again.");
       console.log(error);

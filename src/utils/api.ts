@@ -4,7 +4,15 @@ import axios from "axios";
 const baseUrl = "http://localhost:4000";
 
 export const getUsers = async () => {
-  return axios.get(baseUrl).then((res) => res.data);
+  return axios.get(
+    `${baseUrl}/users`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  )
 };
 
 export const loginUser = async (values: {
@@ -19,9 +27,16 @@ export const registerUser = async (values: {
   email: string;
   password: string;
   roleId: string;
+  
 }) => {
   return axios.post(`${baseUrl}/users`, values).then((res) => res.data);
 };
+
+export const updateUser = async ({values}: any) => {
+  return axios
+    .put(`${baseUrl}/users/${localStorage.getItem("userId")}`, values)
+    .then((res) => res.data);
+}
 
 //roles
 export const getRoles = async () => {
@@ -29,7 +44,15 @@ export const getRoles = async () => {
 };
 
 export const getMembers = async () => {
-  return axios.get(`${baseUrl}/members`).then((res) => res.data);
+  return axios.get(
+    `${baseUrl}/members`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  )
 };
 
 export const createMember = async (data: {
@@ -41,6 +64,7 @@ export const createMember = async (data: {
     phone: string;
     dateOfBirth: string;
     profilePicture?: string | undefined;
+    roleId: string;
   };
 }) => {
   return axios
@@ -73,3 +97,16 @@ export const deleteMember = async (id: string) => {
 export const getMemberById = async (id: string) => {
   return axios.get(`${baseUrl}/members/${id}`).then((res) => res.data);
 };
+
+export const getActivityLogs = async () => {
+  return axios.get(`${baseUrl}/activity-logs`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  )
+};
+
+ 

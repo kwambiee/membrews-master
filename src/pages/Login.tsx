@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Navigate } from "react-router";
-import { useState } from "react";
-import { loginUser } from "@/utils/api";
+import { useState, useEffect } from "react";
+import { loginUser, updateUser } from "@/utils/api";
 import { useAuth } from "@/context";
 import toast from "react-hot-toast";
 
@@ -27,7 +27,8 @@ export type signInFormValues = z.infer<typeof signInFormSchema>;
 const SignInForm = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const { authenticateUser, isAuthenticated } = useAuth();
+  const { authenticateUser, isAuthenticated, hasProfile } = useAuth();
+  const [memberId, setMemberId] = useState<string | null>(null);
 
   const signInForm = useForm<signInFormValues>({
     resolver: zodResolver(signInFormSchema),
@@ -37,14 +38,18 @@ const SignInForm = () => {
     },
   });
 
+
+
   const signInSubmit = async (values: signInFormValues) => {
     setLoading(true);
     setErrorMessage("");
 
     try {
       const response = await loginUser(values);
+      const user_response = await updateUser({hasProfile: true});
+      console.log(user_response, "user");
       toast.success("Login successful");
-      authenticateUser( response.userId, response.token);
+      authenticateUser( response.userId, response.token, response.roleId, user_response.hasProfile);
     } catch (error) {
       toast.error("Invalid login credentials");
       setErrorMessage("Invalid login credentials");
@@ -55,7 +60,12 @@ const SignInForm = () => {
   };
 
   if (isAuthenticated) {
+    // user has memberId redirect to dhasb
     return <Navigate to="/profile" />;
+  }
+
+  if( isAuthenticated && hasProfile){
+    return <Navigate to="/dashboard" />;
   }
 
   return (
