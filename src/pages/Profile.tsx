@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,8 +36,9 @@ export type ProfileFormValues = z.infer<typeof ProfileFormSchema>;
 const ProfileForm = () => {
   const { userId, token, roleId, setUserProfile } = useAuth();
   const [profilePicture, setProfilePicture] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  console.log(loading, "loading")
 
 
   const profileForm = useForm<ProfileFormValues>({
@@ -63,10 +64,10 @@ const ProfileForm = () => {
       const storageRef = ref(storage, `profilePictures/${file.name}`);
       // Upload the file to Firebase Storage
       const snapShot = await uploadBytes(storageRef, file);
-      console.log("Uploaded a file", snapShot);
+
       // Get the download URL
       const downloadURL = await getDownloadURL(snapShot.ref);
-    console.log("Image URL:", downloadURL);
+
     // Set the profilePicture field to the download URL
     setProfilePicture(downloadURL);
     // profileForm.setValue("profilePicture", downloadURL);
@@ -77,10 +78,6 @@ const ProfileForm = () => {
   };
 
   const profileSubmit = async (values: ProfileFormValues) => {
-    console.log("Profile updated successfully");
-    setLoading(true);
-    console.log(roleId);
-
     const data = {
       values: { ...values, profilePicture: profilePicture, userId: userId, roleId: roleId || "" },
       token: token,
@@ -88,6 +85,7 @@ const ProfileForm = () => {
     try {
       const response =  await createMember(data);
       const user_response = await updateUser({userId: response.userId, hasProfile: true});
+      console.log(user_response)
       setUserProfile(true);
       navigate("/dashboard");
     } catch (error) {

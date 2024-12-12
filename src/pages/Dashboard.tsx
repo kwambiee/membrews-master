@@ -134,11 +134,15 @@ const Dashboard = () => {
   const [userRoles, setUserRoles] = useState<roles[]>([]);
   const [adminId, setAdminId] = useState<string | null>(null);
   const [memberId, setMemberId] = useState<string | null>(null);
+  const [totalAdmins, setTotalAdmins] = useState<number>(0);
+  const [totalMembers, setTotalMembers] = useState<number>(0);
+  const [totalUsers, setTotalUsers] = useState<number>(0);
 
   useEffect(() => {
     getAllUsers();
     getAllLogs();
     getUserRoles();
+    // getStatitics();
   }, []);
 
 
@@ -152,11 +156,26 @@ const Dashboard = () => {
   };
   }
 
-   // get all members 
    const getAllUsers = async () => {
+  try {
     const response = await getMembers();
-    setMemberData(response.data);
-   }
+    const members = response.data;
+    setMemberData(members);
+    if (members.length > 0) {
+      // console.log(members, "members")
+      const totalAdmins = members.filter((member: userDataType) => member.roleId === adminId).length;
+      // console.log(totalAdmins, "-----total admin");
+      setTotalAdmins(totalAdmins);
+      
+      setTotalMembers(members.filter((member: userDataType) => member.roleId === memberId).length);
+      setTotalUsers(members.length);
+    }
+  } catch (error) {
+    console.error("Error fetching members:", error);
+  }
+};
+
+
 
   // -----get activity logs from api//
 
@@ -165,12 +184,14 @@ const Dashboard = () => {
     setActivityLogs(response.data);
   }
 
-  const totalAdmins = memberData.filter((member) => member.roleId === adminId).length;
-  const totalMembers = memberData.filter((member) => member.roleId === memberId).length;
-  const totalUsers = memberData.length;
+  // const getStatitics = () => {
+  //   const totalAdmins = memberData.filter((member) => member.roleId === adminId).length;
+  //   const totalMembers = memberData.filter((member) => member.roleId === memberId).length;
+  //   const totalUsers = memberData.length;
+  //   return { totalAdmins, totalMembers, totalUsers };
+  // }
 
-  console.log(totalAdmins, "---admin", totalMembers,"members",totalUsers, "users");
-
+  
   // const find total admin, members and users at different dates of creation
   const memberChartData: memberChart[] = [];
   const memberDataByDate = memberData.reduce((acc, member) => {
@@ -191,8 +212,6 @@ const Dashboard = () => {
     return acc;
   }, {} as Record<string, memberChart>);
   memberChartData.push(...Object.values(memberDataByDate));
-
-  console.log(memberChartData);
 
   useEffect(() => {
     if (!isAuthenticated) {

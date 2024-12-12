@@ -113,7 +113,6 @@ import {
     const [timeRange, setTimeRange] = useState("30d")
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.date)
-        console.log(date, "date")
         const referenceDate = new Date("2024-06-30")
         let daysToSubtract = 60
         if (timeRange === "15d") {
@@ -123,11 +122,8 @@ import {
         }
         const startDate = new Date(referenceDate)
         startDate.setDate(startDate.getDate() - daysToSubtract)
-        console.log(startDate, "startDate")
         return date >= startDate
       })
-
-      console.log(filteredData, "filteredData")
 
       return (
         <Card>

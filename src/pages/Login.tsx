@@ -28,7 +28,6 @@ const SignInForm = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { authenticateUser, isAuthenticated, hasProfile } = useAuth();
-  const [memberId, setMemberId] = useState<string | null>(null);
 
   const signInForm = useForm<signInFormValues>({
     resolver: zodResolver(signInFormSchema),
@@ -59,8 +58,6 @@ const SignInForm = () => {
 
 
 if (isAuthenticated) {
-  console.log(isAuthenticated, "is authenticated");
-  console.log(hasProfile, "has profile");
   return <Navigate to={hasProfile ? "/dashboard" : "/profile"} />;
 }
 
