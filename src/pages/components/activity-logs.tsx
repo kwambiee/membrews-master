@@ -1,16 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
-import { Car } from "lucide-react"
-import { ref } from "firebase/storage"
 
 type activityType = {
   id: string;
@@ -53,20 +50,27 @@ const ActivityLogs = ({ logs, members }: ActivityLogsProps) => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | null>(null)
 
-    const refinedLogData: logDataType[] = []
-    const updateLogData = logs.map((log: activityType) => {
-        const member = members.find((member: userDataType) => member.userId === log.userId)
-        return {
-          firstName: member?.firstName,
-          lastName: member?.lastName,
-          profilePicture: member?.profilePicture,
-          action: log.action,
-          description: log.description
-        }
-      }
-    )
+    const refinedLogData: logDataType[] = [];
 
-    refinedLogData.push(...updateLogData)
+const updateLogData = logs.map((log: activityType) => {
+  try {
+    const member = members.find((member: userDataType) => member.userId === log.userId);
+    return {
+      firstName: member?.firstName,
+      lastName: member?.lastName,
+      profilePicture: member?.profilePicture,
+      action: log.action,
+      description: log.description,
+    };
+  } catch (error: any) {
+    setError(error);
+    return null; // Return null or handle the error case appropriately
+  }
+}).filter(log => log !== null); // Filter out any null values
+
+refinedLogData.push(...updateLogData);
+
+    setLoading(false)
     
 
     return (
