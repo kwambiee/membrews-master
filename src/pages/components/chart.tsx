@@ -104,7 +104,7 @@ import {
       color: "hsl(var(--chart-2))",
     },
     users: {
-      label: "Users",
+      label: " Total Users",
       color: "hsl(var(--chart-3))",
     },
   } satisfies ChartConfig
@@ -112,6 +112,7 @@ import {
   const  MembershipChart = ({chartData}: { chartData: chartData[] })  =>{
     const [timeRange, setTimeRange] = useState("30d")
     const filteredData = chartData.filter((item) => {
+      console.log(item, "------item")
         const date = new Date(item.date)
         const referenceDate = new Date("2024-06-30")
         let daysToSubtract = 60

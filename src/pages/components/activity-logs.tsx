@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+
 import {
     Card,
     CardContent,
@@ -47,30 +47,24 @@ interface ActivityLogsProps {
 }
 
 const ActivityLogs = ({ logs, members }: ActivityLogsProps) => {
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<Error | null>(null)
+    
 
-    const refinedLogData: logDataType[] = [];
+    const refinedLogData: logDataType[] = []
+    const updateLogData = logs.map((log: activityType) => {
+      console.log(members, "members")
+        const member = members.find((member: userDataType) => member?.userId === log.userId)
+        console.log(member, "member")
+        return {
+          firstName: member?.firstName,
+          lastName: member?.lastName,
+          profilePicture: member?.profilePicture,
+          action: log.action,
+          description: log.description
+        }
+      }
+    )
 
-const updateLogData = logs.map((log: activityType) => {
-  try {
-    const member = members.find((member: userDataType) => member.userId === log.userId);
-    return {
-      firstName: member?.firstName,
-      lastName: member?.lastName,
-      profilePicture: member?.profilePicture,
-      action: log.action,
-      description: log.description,
-    };
-  } catch (error: any) {
-    setError(error);
-    return null; // Return null or handle the error case appropriately
-  }
-}).filter(log => log !== null); // Filter out any null values
-
-refinedLogData.push(...updateLogData);
-
-    setLoading(false)
+    refinedLogData.push(...updateLogData)
     
 
     return (
@@ -80,8 +74,7 @@ refinedLogData.push(...updateLogData);
                 <CardDescription className="h-12"></CardDescription>
             </CardHeader>
             <CardContent className="h-64 overflow-y-auto">
-              {loading && <p>Loading...</p>}
-              {error && <p>Error: {error.message}</p>}
+              
       
         
                {refinedLogData.map((log, index) => (

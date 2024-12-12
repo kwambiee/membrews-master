@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const baseUrl = "https://member-management-backend.vercel.app";
-// const baseUrl = "http://localhost:4000";
+// const baseUrl = "https://member-management-backend.vercel.app";
+ const baseUrl = "http://localhost:4000";
 
 export const getUsers = async () => {
   return axios.get(

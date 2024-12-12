@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "./components/data-table";
 import MembershipChart from "./components/chart";
@@ -136,82 +136,94 @@ const Dashboard = () => {
   const [memberId, setMemberId] = useState<string | null>(null);
   const [totalAdmins, setTotalAdmins] = useState<number>(0);
   const [totalMembers, setTotalMembers] = useState<number>(0);
+  const  [loading, setLoading] = useState(true);
   const [totalUsers, setTotalUsers] = useState<number>(0);
+
+  console.log(loading, "loading")
 
   useEffect(() => {
     getAllUsers();
     getAllLogs();
     getUserRoles();
-    // getStatitics();
   }, []);
 
 
   // get user roles from api//
   const getUserRoles = async () => {
+  try {
     const roles = await getRoles();
     setUserRoles(roles);
-    if (userRoles.length > 0) {
-      setAdminId(roles.find((role: roles) => role.roleName === "Admin")?.id || null);
-      setMemberId(roles.find((role: roles) => role.roleName === "Member")?.id || null);
-  };
+    const admin: roles | undefined = roles.find((role: roles) => role.roleName === "Admin");
+    const member: roles | undefined = roles.find((role: roles) => role.roleName === "Member");
+    setAdminId(admin?.id || null);
+    setMemberId(member?.id || null);
+  } catch (error) {
+    console.log(error);
   }
+};
+
+  
 
    const getAllUsers = async () => {
   try {
     const response = await getMembers();
     const members = response.data;
     setMemberData(members);
-    if (members.length > 0) {
-      // console.log(members, "members")
-      const totalAdmins = members.filter((member: userDataType) => member.roleId === adminId).length;
-      // console.log(totalAdmins, "-----total admin");
-      setTotalAdmins(totalAdmins);
-      
-      setTotalMembers(members.filter((member: userDataType) => member.roleId === memberId).length);
-      setTotalUsers(members.length);
-    }
+
+    // Calculate totals here  calculateTotals(members);
   } catch (error) {
-    console.error("Error fetching members:", error);
+    console.log(error);
+  } finally {
+    setLoading(false);
   }
 };
-
 
 
   // -----get activity logs from api//
 
   const getAllLogs = async () => {
     const response = await getActivityLogs();
+    console.log(response.data, "response")
     setActivityLogs(response.data);
   }
 
-  // const getStatitics = () => {
-  //   const totalAdmins = memberData.filter((member) => member.roleId === adminId).length;
-  //   const totalMembers = memberData.filter((member) => member.roleId === memberId).length;
-  //   const totalUsers = memberData.length;
-  //   return { totalAdmins, totalMembers, totalUsers };
-  // }
-
   
-  // const find total admin, members and users at different dates of creation
-  const memberChartData: memberChart[] = [];
-  const memberDataByDate = memberData.reduce((acc, member) => {
-    const date = member.createdAt
+const memberChartData: memberChart[] = useMemo(() => {
+  let adminsCount = 0;
+  let membersCount = 0;
+  let usersCount = 0;
+
+  const dataByDate = memberData.reduce((acc, member) => {
+    const date = new Date(member.createdAt).toISOString().split('T')[0]; // Format the date to YYYY-MM-DD
     if (!acc[date]) {
       acc[date] = {
         admins: 0,
         members: 0,
-        users: totalUsers,
+        users: 0,
         date,
       };
     }
     if (member.roleId === adminId) {
       acc[date].admins += 1;
+      adminsCount++;
     } else if (member.roleId === memberId) {
       acc[date].members += 1;
+      membersCount++;
     }
+    acc[date].users += 1;
+    usersCount++;
     return acc;
   }, {} as Record<string, memberChart>);
-  memberChartData.push(...Object.values(memberDataByDate));
+
+  setTotalAdmins(adminsCount);
+  setTotalMembers(membersCount);
+  setTotalUsers(usersCount);
+
+  return Object.values(dataByDate);
+}, [memberData, adminId, memberId]);
+
+
+
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -241,7 +253,7 @@ const Dashboard = () => {
           phone: member.phone,
           role: userRoles.find((role) => role.id === member.roleId)?.roleName || "",
           profilePicture: member.profilePicture,
-          dateOfBirth: member.dateOfBirth,
+          dateOfBirth: new Date(member.dateOfBirth).toISOString().split('T')[0],
         }))}
       />
     </div>
@@ -249,3 +261,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

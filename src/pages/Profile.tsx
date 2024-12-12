@@ -54,46 +54,53 @@ const ProfileForm = () => {
     },
   });
 
-  const handleProfilePictureChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    try{
-      const file = event.target.files?.[0];
-       if (!file) return;
+const handleProfilePictureChange = async (
+  event: React.ChangeEvent<HTMLInputElement>
+) => {
+  try {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-      const storageRef = ref(storage, `profilePictures/${file.name}`);
-      // Upload the file to Firebase Storage
-      const snapShot = await uploadBytes(storageRef, file);
+    const storageRef = ref(storage, `profilePictures/${file.name}`);
+    // Upload the file to Firebase Storage
+    const snapShot = await uploadBytes(storageRef, file);
 
-      // Get the download URL
-      const downloadURL = await getDownloadURL(snapShot.ref);
+    // Get the download URL
+    const downloadURL = await getDownloadURL(snapShot.ref);
 
     // Set the profilePicture field to the download URL
     setProfilePicture(downloadURL);
-    // profileForm.setValue("profilePicture", downloadURL);
-    }catch(error){
-      console.log(error);
-    }
-    
+    profileForm.setValue("profilePicture", downloadURL);
+    console.log("Profile picture URL set:", downloadURL);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const profileSubmit = async (values: ProfileFormValues) => {
+  console.log(values.profilePicture);
+  if (!profilePicture) {
+    console.error("Profile picture is not set");
+    return;
+  }
+
+  const data = {
+    values: { ...values, profilePicture: profilePicture, userId: userId, roleId: roleId || "" },
+    token: token,
   };
 
-  const profileSubmit = async (values: ProfileFormValues) => {
-    const data = {
-      values: { ...values, profilePicture: profilePicture, userId: userId, roleId: roleId || "" },
-      token: token,
-    };
-    try {
-      const response =  await createMember(data);
-      const user_response = await updateUser({userId: response.userId, hasProfile: true});
-      console.log(user_response)
-      setUserProfile(true);
-      navigate("/dashboard");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const response = await createMember(data);
+    const user_response = await updateUser({ userId: response.userId, hasProfile: true });
+    console.log(user_response);
+    setUserProfile(true);
+    navigate("/dashboard");
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-gray-200">
