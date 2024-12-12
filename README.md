@@ -1,50 +1,113 @@
-# React + TypeScript + Vite
+# Member Management Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a **Member Management App** that provides functionality to manage and display user data, activity logs, and members in a table. It includes authentication to ensure that only authorized users can access the dashboard. The project is built using **Vite**, **React** with **TypeScript** and employs `useContext` for global state management.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+### Core Features
+- **Authentication**:
+  - Users can log in or sign up.
+  - Dashboard access is restricted to authenticated users.
+  
+- **Dashboard**:
+  - Displays the number of users.
+  - Shows user activity logs.
+  - Lists members in a table format.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Profile Management**:
+  - Users can upload profile pictures.
+  - Fields include first name, last name, date of birth, phone number, and profile picture.
 
-- Configure the top-level `parserOptions` property like this:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Technologies Used
+
+- **Frontend**:
+  - Vite
+  - React
+  - Typescript
+
+- **Backend**:
+  - Node.js with Express (for the API)
+  - Hosted on Vercel: [Member Management Backend](https://member-management-backend.vercel.app)
+
+## Installation and Setup
+
+### Prerequisites
+- Node.js (v21)
+- npm 
+
+### Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/kwambiee/membrews-master.git
+   cd membrews-master
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. Run the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+4. Open the app in your browser:
+   ```
+   http://localhost:3000
+   ```
+
+---
+
+## Environment Variables
+
+Create a `.env.local` file in the root directory and add the following variables:
+
+```env
+NEXT_PUBLIC_BACKEND_URL=https://member-management-backend.vercel.app
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+---
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Authentication Flow
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+1. **Sign Up**:
+   - Collect user details: first name, last name, date of birth, phone, and profile picture.
+   - Send the data to the backend API for registration.
+
+2. **Log In**:
+   - Authenticate with email and password.
+   - Receive a token and userId from the backend.
+
+3. **Dashboard Access**:
+   - Validate token with `useContext`.
+   - Redirect to the login page if the user is unauthenticated.
+
+
+
+## Contributions
+
+Contributions are welcome! Please create a pull request with your proposed changes.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+---
+
+## Contact
+
+For any questions or feedback, please contact:
+- Name: Joy Kwamboka
+- Email: [kwambokaj2.jk@gmail.com](mailto:kwambokaj2.jk@gmail.com)
+- GitHub: [https://github.com/kwambiee](https://github.com/kwambiee)
+
