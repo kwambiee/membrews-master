@@ -3,6 +3,17 @@ import axios from "axios";
 // const baseUrl = "https://member-management-backend.vercel.app";
  const baseUrl = "http://localhost:4000";
 
+ if (!baseUrl) {
+  throw new Error("REACT_PUBLIC_BACKEND_URL is not defined");
+}
+
+export const apiClient = axios.create({
+  baseURL: baseUrl || "http://localhost:4000",
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 export const getUsers = async () => {
   return axios.get(
     `${baseUrl}/users`,

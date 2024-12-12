@@ -29,14 +29,14 @@ This project is a **Member Management App** that provides functionality to manag
   - Typescript
 
 - **Backend**:
-  - Node.js with Express (for the API)
+  - Node.js, Typescript with Express (for the API)
   - Hosted on Vercel: [Member Management Backend](https://member-management-backend.vercel.app)
 
 ## Installation and Setup
 
 ### Prerequisites
 - Node.js (v21)
-- npm 
+- npm
 
 ### Steps
 1. Clone the repository:
@@ -61,7 +61,7 @@ This project is a **Member Management App** that provides functionality to manag
 
 4. Open the app in your browser:
    ```
-   http://localhost:3000
+   http://localhost:5173
    ```
 
 ---
@@ -73,6 +73,37 @@ Create a `.env.local` file in the root directory and add the following variables
 ```env
 NEXT_PUBLIC_BACKEND_URL=https://member-management-backend.vercel.app
 ```
+
+## Clone Backend Repository
+
+To run the backend locally, follow these steps:
+
+1. Clone the backend repository:
+   ```bash
+   git clone https://github.com/your-username/member-management-backend.git
+   ```
+
+2. Navigate to the backend directory:
+   ```bash
+   cd member-management-backend
+   ```
+
+3. Install the dependencies:
+   ```bash
+   npm install
+   ```
+
+4. Start the backend server:
+   ```bash
+   npm run dev
+   ```
+
+5. Update the `REACT_PUBLIC_BACKEND_URL` in your `.env.local` file to point to the local backend server:
+   ```env
+   NEXT_PUBLIC_BACKEND_URL=http://localhost:4000
+   ```
+
+Now your frontend will communicate with the locally running backend server.
 
 ---
 
