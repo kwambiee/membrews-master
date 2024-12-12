@@ -41,7 +41,7 @@ type Role = {
 };
 
 const SignUpForm = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [roles, setRoles] = useState<Role[]>([]);
 
   const { authenticateUser, isAuthenticated } = useAuth();
@@ -82,6 +82,8 @@ const SignUpForm = () => {
       setLoading(false);
     }
   };
+
+  console.log(loading)
 
   if (isAuthenticated) {
     return <Navigate to="/profile" />;
