@@ -83,16 +83,26 @@ const profileSubmit = async (values: ProfileFormValues) => {
     console.error("Profile picture is not set");
     return;
   }
+  console.log(userId, "userId");
+
+  if (!userId) {
+    console.error("User ID is not set");
+    return;
+  }
+
 
   const data = {
     values: { ...values, profilePicture: profilePicture, userId: userId, roleId: roleId || "" },
     token: token,
   };
 
+  
+
   try {
     const response = await createMember(data);
+    console.log(response, "----response");
     const user_response = await updateUser({ userId: response.userId, hasProfile: true });
-    console.log(user_response);
+    console.log(user_response, "----user_response");
     setUserProfile(true);
     navigate("/dashboard");
   } catch (error) {
