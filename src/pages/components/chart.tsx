@@ -110,13 +110,12 @@ import {
   } satisfies ChartConfig
 
   const  MembershipChart = ({chartData}: { chartData: chartData[] })  =>{
-    const [timeRange, setTimeRange] = useState("30d")
+    const [timeRange, setTimeRange] = useState("90d")
     const filteredData = chartData.filter((item) => {
-      console.log(item, "------item")
         const date = new Date(item.date)
-        const referenceDate = new Date("2024-06-30")
-        let daysToSubtract = 60
-        if (timeRange === "15d") {
+        const referenceDate = new Date("2024-12-16")
+        let daysToSubtract = 90
+        if (timeRange === "30d") {
           daysToSubtract = 30
         } else if (timeRange === "7d") {
           daysToSubtract = 7
@@ -238,7 +237,7 @@ import {
                 <Area
                   dataKey="admins"
                   type="natural"
-                  fill="url(#filladmins)"
+                  fill="var(--color-admins)"
                   stroke="var(--color-admins)"
                   stackId="a"
                 />
