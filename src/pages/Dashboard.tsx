@@ -205,22 +205,37 @@ const memberChartData: memberChart[] = useMemo(() => {
     }
     if (member.roleId === adminId) {
       acc[date].admins += 1;
-      adminsCount++;
     } else if (member.roleId === memberId) {
       acc[date].members += 1;
-      membersCount++;
     }
     acc[date].users += 1;
-    usersCount++;
     return acc;
   }, {} as Record<string, memberChart>);
 
+  // Get sorted dates and calculate cumulative totals
+  const sortedData = Object.values(dataByDate)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .map((entry) => {
+      adminsCount += entry.admins;
+      membersCount += entry.members;
+      usersCount += entry.users;
+
+      return {
+        date: entry.date,
+        admins: adminsCount,
+        members: membersCount,
+        users: usersCount,
+      };
+    });
+
+  // Set totals for the current state
   setTotalAdmins(adminsCount);
   setTotalMembers(membersCount);
   setTotalUsers(usersCount);
 
-  return Object.values(dataByDate);
+  return sortedData;
 }, [memberData, adminId, memberId]);
+
 
 
 
